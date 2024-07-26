@@ -1,0 +1,20 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 03.03.2015 19:40
+ */
+
+define('widgets/common/Subjects/WidgetModel', [
+    'model/article/ArticleWidgetModel'
+    ,'helper/AppConsts'
+], function (
+    ArticleWidgetModel
+    ,AppConsts
+) {
+    "use strict";
+    var WidgetModel = ArticleWidgetModel.extend({
+        name: "widgets/common/Subjects/WidgetModel",
+        widgetUrl: '/widget/widgets/common/Subjects',
+    });
+    return WidgetModel;
+});

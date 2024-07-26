@@ -1,0 +1,14 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 06.03.2015 14:31
+ */
+
+define('widgets/qa/NewQuestion/TwigPack', [
+    './views/twig/layout.twig'
+], function (
+    Template
+) {
+    var args = Array.prototype.slice.call(arguments, 0);
+    return args;
+});

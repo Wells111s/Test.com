@@ -1,0 +1,26 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 03.03.2015 19:34
+ */
+
+
+define('widgets/common/Top/WidgetView', [
+    'view/article/ArticleWidgetView'
+    ,'helper/AppConsts'
+    ,'helper/Analytics'
+], function (
+    ArticleWidgetView
+    ,AppConsts
+    ,Analytics
+) {
+
+    "use strict";
+
+    var TopWidgetView = ArticleWidgetView.extend({
+
+
+
+    });
+    return TopWidgetView;
+});

@@ -1,0 +1,33 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 03.03.2015 12:46
+ */
+
+define('widgets/common/MainFilter/WidgetView',[
+        'view/common/SearchFilterView'
+        ,'helper/AppConsts'
+        ,'helper/Analytics'
+    ], function (
+        SearchFilterView
+        ,AppConsts
+        ,Analytics
+) {
+
+    "use strict";
+
+    var MainFilterWidgetView = SearchFilterView.extend({
+
+        events: _.extend({
+
+        }, SearchFilterView.prototype.events),
+
+        ui: _.extend({
+
+        }, SearchFilterView.prototype.ui)
+
+
+
+    });
+    return MainFilterWidgetView;
+});

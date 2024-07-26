@@ -1,0 +1,47 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 03.03.2015 19:34
+ */
+
+
+define('widgets/common/TopMenuV2/WidgetView', [
+    'view/article/ArticleWidgetView'
+    ,'helper/AppConsts'
+    ,'helper/Analytics'
+], function (
+    ArticleWidgetView
+    ,AppConsts
+    ,Analytics
+) {
+
+    "use strict";
+
+    var TopMenuV2WidgetView = ArticleWidgetView.extend({
+
+        events: {
+        },
+
+        ui:{
+            listTabs: '[data-url]'
+        },
+
+        init: function(){
+            this.addVentEvent(AppConsts.EVENT.COMMON.SEARCH_STRING_UPDATED, this.onSearchStringUpdated);
+        },
+
+        updateTabLinks: function(url){
+            this.ui.listTabs.each(function(){
+                var $el = $(this);
+                url = $el.data('url') + url.substring(url.indexOf('?'));
+                $el.attr('href', url);
+            });
+        },
+
+        onSearchStringUpdated: function(url){
+            this.updateTabLinks(url);
+        }
+
+    });
+    return TopMenuV2WidgetView;
+});

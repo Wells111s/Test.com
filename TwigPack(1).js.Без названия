@@ -1,0 +1,14 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 06.03.2015 14:31
+ */
+
+define('widgets/common/Subjects/TwigPack', [
+    './views/twig/layout.twig'
+], function (
+    Template
+) {
+
+    return Template;
+});

@@ -1,0 +1,7 @@
+define(["twig"], function (Twig) {
+	var twig, templates;
+twig = Twig.twig;
+templates = twig({id:"asset/template/twig/AutoFilter.twig", allowInlineIncludes:true, data:undefined, precompiled: true});
+
+	return templates;
+});

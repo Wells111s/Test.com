@@ -1,0 +1,151 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 03.03.2015 19:34
+ */
+
+
+define('widgets/user/Top/WidgetView', [
+    'view/article/UnderArticleWidgetView'
+    ,'helper/AppConsts'
+    ,'helper/Analytics'
+    ,'underscore'
+    ,'./TwigPack'
+    ,'settings'
+], function (
+    UnderArticleWidgetView
+    ,AppConsts
+    ,Analytics
+    ,_
+    ,Templates
+    ,Settings
+) {
+
+    "use strict";
+
+    var WidgetView = UnderArticleWidgetView.extend({
+
+
+        // url: 'api/user/notify' (type, data, count, countGroupped)
+
+        listTemplate: Templates[1],
+        notifyTemplate: Templates[2],
+        notifyDesktopTemplate: Templates[3],
+
+        events: {
+            'click .js-menu-icon':            'onMenuIconClick'
+            ,'click .js-menu-dropdown':       'onMenuDropdownClick'
+            ,'click .js-notification-page':   'onNotificationPageClick'
+        },
+
+        ui:{
+            notifications:              '.js-notifications',
+            notificationList:           '.js-notifications .js-menu-dropdown',
+            notificationIcon:           '.js-notifications .js-menu-icon',
+            notificationCount:          '.js-notification-count',
+            dropdowns:                  '.js-menu-dropdown',
+            notify_count:               '.js-notification-count',
+            notificationItems:          '.js-notification-item'
+        },
+
+        notificationOffset: 0,
+        notificationLimit: 5,
+
+
+        init: function () {
+            this.addVentEvent(AppConsts.EVENT.SYSTEM.CLICK, this.onBodyClick.bind(this));
+            this.addVentEvent(AppConsts.EVENT.SOCKET.USER_NOTIFICATION, this.onNotify.bind(this));
+        },
+
+        renderList: function(list){
+            var listHtml = this.listTemplate.render(list);
+            this.ui.notificationList.html(listHtml);
+        },
+
+        getNotifications: function(){
+            var data = {
+                limit: this.notificationLimit,
+                offset: this.notificationOffset
+            };
+            this.callServer('/api/user/notify/index', data, {
+                success: this.onGetNotificationsSuccess.bind(this)
+                ,error: this.onGetNotificationsError.bind(this)
+            });
+        },
+
+        onNotificationPageClick: function(e){
+            e.preventDefault();
+            var $el = $(e.currentTarget);
+            var no = $el.data('page');
+            this.notificationOffset = (parseInt(no)-1) * this.notificationLimit;
+            this.getNotifications();
+        },
+
+        onBodyClick: function(data){
+            this.ui.dropdowns.addClass('hide');
+        },
+
+        onMenuDropdownClick: function(e){
+            e.stopPropagation();
+            var $target = $(e.target);
+            $target.UShowPreloader();
+        },
+
+        onMenuIconClick: function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var $el = $(e.currentTarget);
+            if($el.parents('.js-notifications').length) {
+                this.getNotifications();
+            }
+            var $list = $el.parent().find('.js-menu-dropdown');
+            var visible = $list.is(':visible');
+            this.ui.dropdowns.addClass('hide');
+            if(!visible) {
+                $list.removeClass('hide');
+            }
+        },
+
+        onGetNotificationsSuccess: function(data){
+            this.renderList(data.response);
+        },
+
+        onGetNotificationsError: function(data){
+            if(console) {
+                console.error ? console.error(data.responseText) : console.log(data.responseText);
+            }
+        },
+
+        onNotify: function(data){
+
+            data = data.data;
+
+            this.ui.notificationIcon.addClass('b-header-user-menu-icon__has-notifications');
+            require('App').playSound(Settings.APP.SOUND.NOTIFY);
+
+            var count = parseInt(this.ui.notificationCount.text()) || 0;
+            this.ui.notificationCount.removeClass('hide').text(++count);
+            var answers = data.data.answers;
+            var title = answers && answers.length ? answers[answers.length - 1].body : "Новое уведомление";
+            var avatar = answers && answers.length ? answers[answers.length - 1].author.avatar : undefined;
+
+            var html = "";
+            if(data.type == "qa_new_activity") {
+                html = this.notifyDesktopTemplate.render({qa: data.data});
+            }else if(data.type == "qa_payed"){
+                html = this.notifyDesktopTemplate.render({qa: data.data});
+                title = 'ПЛАТНЫЙ ВОПРОС !!!';
+            }
+            require('App').desktopNotify(title, {
+                body: html
+                , icon: 'https://s.blamper.ru' + $.extractImagePathFromHash(avatar)
+                , notifyClick: function () {
+                    require('App').newWindow(data.data._url);
+                }
+            });
+        }
+
+
+    });
+    return WidgetView;
+});

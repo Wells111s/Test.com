@@ -1,0 +1,17 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 06.03.2015 14:31
+ */
+
+define('widgets/user/Top/TwigPack', [
+    './views/twig/layout.twig'
+    ,'./views/twig/notification_list.twig'
+    ,'./views/twig/notify.twig'
+    ,'./views/twig/notify_desktop.twig'
+], function (
+    Template
+) {
+    var args = Array.prototype.slice.call(arguments, 0);
+    return args;
+});

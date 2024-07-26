@@ -1,0 +1,63 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 03.03.2015 19:34
+ */
+
+
+define('widgets/common/Subjects/WidgetView', [
+    'view/article/ArticleWidgetView'
+    ,'helper/AppConsts'
+    ,'helper/Analytics'
+    ,'./WidgetModel'
+    ,'./TwigPack'
+], function (
+    ArticleWidgetView
+    ,AppConsts
+    ,Analytics
+    ,WidgetModel
+    ,Template
+) {
+
+    "use strict";
+
+    var SubjectsWidgetView = ArticleWidgetView.extend({
+
+        modelClass:                         WidgetModel,
+        template:                           Template,
+
+        events: {
+            'click .js-categories-title a': 'onTiltleLinkClick',
+            'click .js-categories-list a': 'onCategoryLinkClick'
+        },
+
+        onTiltleLinkClick: function(e){
+            e.preventDefault();
+            var $el = $(e.currentTarget);
+            var event = this.place == 'auto/qa/single'
+                    ? Analytics.V2.QUESTION.CATEGORY_TITLE_CLICK
+                    : Analytics.V2.ARTICLE.CATEGORY_TITLE_CLICK
+                ;
+            require('App').sendAnalyticsWithRedirect(event, $el.attr('href') || $el.data('href'));
+        },
+
+        onCategoryLinkClick: function(e){
+            e.preventDefault();
+            var event, $el = $(e.currentTarget);
+            switch(this.place){
+                case 'auto/qa/single':
+                    event = Analytics.V2.QUESTION.CATEGORY_SUBJECT_CLICK;
+                    break;
+                case 'auto/index/index2':
+                    event = Analytics.V2.INDEX2.CATEGORY_SUBJECT_CLICK;
+                    break;
+                default:
+                    event = Analytics.V2.ARTICLE.CATEGORY_SUBJECT_CLICK;
+            }
+            require('App').sendAnalyticsWithRedirect(event, $el.attr('href') || $el.data('href'));
+        }
+
+
+    });
+    return SubjectsWidgetView;
+});

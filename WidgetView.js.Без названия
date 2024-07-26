@@ -1,0 +1,69 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 03.03.2015 19:34
+ */
+
+
+define('widgets/qa/NewQuestion/WidgetView', [
+    'view/article/UnderArticleWidgetView'
+    ,'helper/AppConsts'
+    ,'helper/Analytics'
+    ,'underscore'
+    ,'jquery.form'
+], function (
+    UnderArticleWidgetView
+    ,AppConsts
+    ,Analytics
+    ,_
+) {
+
+    "use strict";
+
+    var WidgetView = UnderArticleWidgetView.extend({
+
+        events:{
+            'submit form':    'onFormSubmit'
+        },
+
+        ui:{
+            form: 'form'
+        },
+
+        onFormSubmit: function(e){
+            e.preventDefault();
+            var $el = $(e.currentTarget)
+                ,query = $el.formSerialize()
+                ,url = $el.attr('action')
+                ,event
+            ;
+
+            switch(this.place){
+                case 'auto/qa/list':
+                    event = Analytics.V2.QUESTION.ASK_QUESTION_QUESTION_LIST;
+                    break;
+                case 'auto/wiki/list':
+                    event = Analytics.V2.ARTICLE.ASK_QUESTION_ARTICLE_LIST;
+                    break;
+                case 'auto/index/index2':
+                    event = Analytics.V2.INDEX2.ASK_QUESTION;
+                    break;
+                default:
+                    event = Analytics.V2.UNDER_ARTICLE.ASK_QUESTION;
+                    break;
+            }
+
+            require('App').sendAnalyticsWithRedirect(event, url+'?'+query);
+        },
+
+        render: function(){
+
+        },
+
+        onSync: function(){
+
+        }
+
+    });
+    return WidgetView;
+});

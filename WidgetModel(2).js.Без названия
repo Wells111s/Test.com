@@ -1,0 +1,27 @@
+/**
+ * @project Blamper
+ * @user o.kotov / delosgatos(a)gmail.com
+ * @date 03.03.2015 19:40
+ */
+
+define('widgets/user/Top/WidgetModel', [
+    'model/article/UnderArticleWidgetModel'
+], function (
+    UnderArticleWidgetModel
+) {
+    "use strict";
+
+    var WidgetModel = UnderArticleWidgetModel.extend({
+
+        name: "widgets/user/Top/WidgetModel",
+        widgetUrl: '/widget/widgets/user/Top',
+
+        parse: function(data){
+            data = UnderArticleWidgetModel.prototype.parse.apply(this, arguments);
+            return data;
+        }
+
+    });
+
+    return WidgetModel;
+});
